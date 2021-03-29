@@ -306,7 +306,7 @@ export class Oauth2Scheme<
     if (this.options.endpoints.logout) {
       const opts = {
         client_id: this.options.clientId + '',
-        logout_uri: this.logoutRedirectURI
+        post_logout_redirect_uri: this.logoutRedirectURI
       }
       const url = this.options.endpoints.logout + '?' + encodeQuery(opts)
       window.location.replace(url)
@@ -404,6 +404,8 @@ export class Oauth2Scheme<
           this.options.refreshToken.property
         ) as string) || refreshToken
     }
+
+    // console.log(token, refreshToken)
 
     if (!token || !token.length) {
       return
