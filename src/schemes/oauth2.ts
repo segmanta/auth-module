@@ -149,17 +149,15 @@ export class Oauth2Scheme<
 
   protected get redirectURI(): string {
     const basePath = this.$auth.ctx.base || ''
-    const path = normalizePath(
-      basePath + '/' + this.$auth.options.redirect.callback
-    ) // Don't pass in context since we want the base path
+    const path = basePath + this.$auth.options.redirect.callback
+    // Don't pass in context since we want the base path
     return this.options.redirectUri || urlJoin(requrl(this.req), path)
   }
 
   protected get logoutRedirectURI(): string {
-    return (
-      this.options.logoutRedirectUri ||
-      urlJoin(requrl(this.req), this.$auth.options.redirect.logout)
-    )
+    const basePath = this.$auth.ctx.base || ''
+    const path = basePath + this.$auth.options.redirect.logout
+    return this.options.logoutRedirectUri || urlJoin(requrl(this.req), path)
   }
 
   check(checkStatus = false): SchemeCheck {
