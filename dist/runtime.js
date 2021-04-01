@@ -646,6 +646,7 @@ class RefreshController {
   }
 }
 
+exports.TokenStatusEnum = void 0;
 (function(TokenStatusEnum2) {
   TokenStatusEnum2["UNKNOWN"] = "UNKNOWN";
   TokenStatusEnum2["VALID"] = "VALID";
@@ -898,7 +899,7 @@ class BaseScheme {
   }
 }
 
-const DEFAULTS = {
+const DEFAULTS$3 = {
   name: "local",
   endpoints: {
     login: {
@@ -934,7 +935,7 @@ const DEFAULTS = {
 };
 class LocalScheme extends BaseScheme {
   constructor($auth, options, ...defaults) {
-    super($auth, options, ...defaults, DEFAULTS);
+    super($auth, options, ...defaults, DEFAULTS$3);
     this.token = new Token(this, this.$auth.$storage);
     this.requestHandler = new RequestHandler(this, this.$auth.ctx.$axios);
   }
@@ -1046,7 +1047,7 @@ class LocalScheme extends BaseScheme {
   }
 }
 
-const DEFAULTS$1 = {
+const DEFAULTS$2 = {
   name: "cookie",
   cookie: {
     name: null
@@ -1064,7 +1065,7 @@ const DEFAULTS$1 = {
 };
 class CookieScheme extends LocalScheme {
   constructor($auth, options) {
-    super($auth, options, DEFAULTS$1);
+    super($auth, options, DEFAULTS$2);
   }
   mounted() {
     if (process.server) {
@@ -1104,7 +1105,7 @@ class CookieScheme extends LocalScheme {
   }
 }
 
-const DEFAULTS$2 = {
+const DEFAULTS$1 = {
   name: "oauth2",
   accessType: null,
   redirectUri: null,
@@ -1145,7 +1146,7 @@ const DEFAULTS$2 = {
 };
 class Oauth2Scheme extends BaseScheme {
   constructor($auth, options, ...defaults) {
-    super($auth, options, ...defaults, DEFAULTS$2);
+    super($auth, options, ...defaults, DEFAULTS$1);
     this.req = $auth.ctx.req;
     this.token = new Token(this, this.$auth.$storage);
     this.refreshToken = new RefreshToken(this, this.$auth.$storage);
@@ -1157,11 +1158,13 @@ class Oauth2Scheme extends BaseScheme {
   }
   get redirectURI() {
     const basePath = this.$auth.ctx.base || "";
-    const path = normalizePath(basePath + "/" + this.$auth.options.redirect.callback);
+    const path = basePath + this.$auth.options.redirect.callback;
     return this.options.redirectUri || urlJoin(requrl2__default['default'](this.req), path);
   }
   get logoutRedirectURI() {
-    return this.options.logoutRedirectUri || urlJoin(requrl2__default['default'](this.req), this.$auth.options.redirect.logout);
+    const basePath = this.$auth.ctx.base || "";
+    const path = basePath + this.$auth.options.redirect.logout;
+    return this.options.logoutRedirectUri || urlJoin(requrl2__default['default'](this.req), path);
   }
   check(checkStatus = false) {
     const response = {
@@ -1388,7 +1391,7 @@ class Oauth2Scheme extends BaseScheme {
   }
 }
 
-const DEFAULTS$3 = {
+const DEFAULTS = {
   name: "refresh",
   endpoints: {
     refresh: {
@@ -1409,7 +1412,7 @@ const DEFAULTS$3 = {
 };
 class RefreshScheme extends LocalScheme {
   constructor($auth, options) {
-    super($auth, options, DEFAULTS$3);
+    super($auth, options, DEFAULTS);
     this.refreshToken = new RefreshToken(this, this.$auth.$storage);
     this.refreshController = new RefreshController(this);
   }
